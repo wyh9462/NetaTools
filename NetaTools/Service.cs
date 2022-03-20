@@ -26,9 +26,13 @@ namespace NetaTools
         public static void DistinctListBox(ObjectCollection items)
         {
             List<string> temp = new List<string>();
-            foreach (var item in items)
+            foreach (string item in items)
             {
-                temp.Add((string)item);
+                if (item.StartsWith("/*"))
+                {
+                    continue;
+                }
+                temp.Add(item);
             }
 
             items.Clear();
@@ -36,23 +40,36 @@ namespace NetaTools
 
         }
 
-        public static void DoReplaceFiles(string file, string oldText, string newText)
+        public static bool DoReplaceFiles(string file, string oldText, string newText)
         {
-            int i = 0;
+            if (file.StartsWith("/*"))
+            {
+                return false;
+            }
+
             var eType = FileEncoding.GetType(file);
             var lines = File.ReadAllLines(file, eType);
             StreamWriter sw = new StreamWriter(file, false, eType);
+            int i = 0;
             while (i < lines.Length)
             {
                 sw.WriteLine(lines[i].Replace(oldText, newText));
                 i++;
             }
             sw.Close();
+
+            return true;
         }
 
-        public static string DoReplaceFileName(string fullName, string oldText, string newText)
+        public static bool DoReplaceFileName(string fullName, string oldText, string newText, out string destFileName)
         {
-            string destFileName = null;
+            destFileName = null;
+
+            if (fullName.StartsWith("/*"))
+            {
+                return false;
+            }
+
             if (File.Exists(fullName))
             {
                 var file = new FileInfo(fullName);
@@ -61,7 +78,7 @@ namespace NetaTools
                 file.MoveTo(destFileName);
             }
 
-            return destFileName;
+            return true;
         }
     }
 

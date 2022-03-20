@@ -16,6 +16,7 @@ namespace NetaTools
         public ReplaceFiles()
         {
             InitializeComponent();
+            button1_Click(null,null);
         }
 
         private void ReplaceFiles_FormClosed(object sender, FormClosedEventArgs e)
@@ -32,6 +33,11 @@ namespace NetaTools
         {
             listBox1.Items.Clear();
             listBox2.Items.Clear();
+            listBox1.Items.Add("/* 拖入文件或文件夹后，此处显示符合预设文件类型的文件 */");
+            listBox1.Items.Add("/* 既可以可替换文本也可以替换文件名 */");
+            listBox1.Items.Add("/* 替换功能区分大小写 */");
+            listBox2.Items.Add("/* 拖入文件或文件夹后，此处显示不符合预设文件类型 */");
+            listBox2.Items.Add("/* 只可以替换文件名的文件 */");
             textBox2.Text = null;
             textBox3.Text = null;
         }
@@ -104,8 +110,8 @@ namespace NetaTools
                 for (int i = 0; i < listBox1.Items.Count; i++)
                 {
                     string item = (string)listBox1.Items[i];
-                    Service.DoReplaceFiles(item, textBox2.Text, textBox3.Text);
-                    replaceNum++;
+                    bool b = Service.DoReplaceFiles(item, textBox2.Text, textBox3.Text);
+                    if (b) replaceNum++;
                 }
 
                 MessageBox.Show($"共处理文件{replaceNum}个");
@@ -133,9 +139,12 @@ namespace NetaTools
                     string item = (string)listBox1.Items[i];
                     if (item.Contains(textBox2.Text))
                     {
-                        string newFileName = Service.DoReplaceFileName(item, textBox2.Text, textBox3.Text);
-                        listBox1.Items[i] = newFileName;
-                        renameNum++;
+                        bool b = Service.DoReplaceFileName(item, textBox2.Text, textBox3.Text, out string newFileName);
+                        if (b)
+                        {
+                            listBox1.Items[i] = newFileName;
+                            renameNum++;
+                        }
                     }
                 }
 
@@ -144,9 +153,12 @@ namespace NetaTools
                     string item = (string)listBox2.Items[i];
                     if (item.Contains(textBox2.Text))
                     {
-                        string newFileName = Service.DoReplaceFileName(item, textBox2.Text, textBox3.Text);
-                        listBox2.Items[i] = newFileName;
-                        renameNum++;
+                        bool b = Service.DoReplaceFileName(item, textBox2.Text, textBox3.Text, out string newFileName);
+                        if (b)
+                        {
+                            listBox2.Items[i] = newFileName;
+                            renameNum++;
+                        }
                     }
                 }
 

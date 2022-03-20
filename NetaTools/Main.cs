@@ -19,9 +19,9 @@ namespace NetaTools
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Hide();
-            CreateTableSqlScript form = new CreateTableSqlScript();
-            form.ShowDialog();
+            //Hide();
+            //CreateTableSqlScript form = new CreateTableSqlScript();
+            //form.ShowDialog();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -34,6 +34,13 @@ namespace NetaTools
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Hide();
+            ReleaseBiliDown form = new ReleaseBiliDown();
+            form.ShowDialog();
         }
     }
 }
